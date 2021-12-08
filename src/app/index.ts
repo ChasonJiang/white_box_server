@@ -7,7 +7,7 @@ import { USER_CARD_INFO } from './user';
 const app = express();
 const port = 3500;
 
-app.use(express.json());
+app.use(express.json({'limit':'100mb'}));
 app.use(express.urlencoded({extended:false}));
 
 const TYPE:{[key:string]:Function} ={
