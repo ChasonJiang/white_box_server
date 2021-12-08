@@ -23,6 +23,7 @@ const TYPE:{[key:string]:Function} ={
     'GetCommentIndexList':CommentIndexList,
     'GetCommentList':CommentList,
     'GetSubCommentList':SubCommentList,
+    'UploadPost':UploadPost,
 };
 
 app.post('/',(req:Request, res:Response,next:NextFunction) =>main(req,res,next));
@@ -113,6 +114,12 @@ function CommentList(req:Request, res:Response){
 function SubCommentList(req:Request, res:Response){
     res.json({
         subComments:[BASE_COMMENT,BASE_COMMENT,BASE_COMMENT,BASE_COMMENT,BASE_COMMENT,BASE_COMMENT,BASE_COMMENT]
+    })
+}
+function UploadPost(req:Request, res:Response){
+    console.log(req.body.body.post);
+    res.json({
+        success:true,
     })
 }
 
