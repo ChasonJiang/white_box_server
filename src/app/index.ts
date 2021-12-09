@@ -6,9 +6,12 @@ import { TOPIC_CARD } from './TopicCard';
 import { USER_CARD_INFO } from './user';
 const app = express();
 const port = 3500;
+const cors=require("cors");
 
 app.use(express.json({'limit':'100mb'}));
 app.use(express.urlencoded({extended:false}));
+app.use(cors()); 
+
 
 const TYPE:{[key:string]:Function} ={
     'GetPostCardList':PostCardList,
@@ -26,7 +29,7 @@ const TYPE:{[key:string]:Function} ={
     'UploadPost':UploadPost,
 };
 
-app.post('/',(req:Request, res:Response,next:NextFunction) =>main(req,res,next));
+app.post('/api',(req:Request, res:Response,next:NextFunction) =>main(req,res,next));
 
 function main(req:Request, res:Response, next:NextFunction){
     
