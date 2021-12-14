@@ -1,8 +1,7 @@
-import { SubComment } from "./comment";
 import { Post, PostCard, PostCardDetail } from "./Post";
 import { TopicCard } from "./Topic";
 import { UserCard, UserInfo } from "./User";
-import { Comment } from "./Comment";
+import { Comment,SubComment } from "./Comment";
 export interface PostResponse{
     post: Post;
     userCard: UserCard;
@@ -55,4 +54,21 @@ export interface CommentResponse{
 }
 export interface SubCommentResponse{
     subComments:SubComment[]
+}
+export interface UploadPostResponse{
+    success: boolean;
+    message?: string;
+}
+export interface UploadCommentResponse{
+    success: boolean;
+    message?: string;
+}
+export interface FollowResponse{
+    success: boolean;
+    message?: string;
+}
+export interface LoginResponse{
+    success: boolean;
+    message?: string;
+    userInfo?:UserInfo;
 }
