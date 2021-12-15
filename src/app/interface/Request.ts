@@ -95,3 +95,13 @@ export interface FollowRequestParams{
 export interface LoginRequestParams{
     pwd:string;
 }
+
+
+//store
+export interface searchSimpleGameRequestParams{
+    content:string;
+}
+export interface SimpleGameRequestParams{
+    number:number;
+}
+
