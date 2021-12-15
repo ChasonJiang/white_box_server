@@ -43,43 +43,7 @@ function main(req:Request, res:Response, next:NextFunction){
 }
 
 
-//store
-function searchSimpleGame(req:Request, res:Response) {
-    res.json({
-        simplegamelist:simpleGame
-    })
-}
 
-function getSimpleGame(req:Request, res:Response) {
-    res.json({
-        simplegamelist:simpleGame
-    })
-}
-
-
-function getstoreShowImg(req:Request, res:Response){
-    res.json({
-        storeShowImg:storeShowImg
-    })
-}
-
-
-function getdetailedgame(req:Request, res:Response){
-    res.json({
-        detailedgame:detailedGame[0]
-    })
-}
-function addgame(req:Request, res:Response){
-    res.json({
-        success:true
-    })
-}
-
-function buygame(req:Request, res:Response){
-    res.json({
-        success:true
-    })
-}
 
 
 app.listen(port,()=>{
