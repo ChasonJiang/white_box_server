@@ -1,8 +1,9 @@
-import { SubComment } from "./comment";
+
 import { Post, PostCard, PostCardDetail } from "./Post";
 import { TopicCard } from "./Topic";
 import { UserCard, UserInfo } from "./User";
-import { Comment } from "./Comment";
+import { Comment, SubComment } from "./Comment";
+import { simplegame } from "./game";
 export interface PostResponse{
     post: Post;
     userCard: UserCard;
@@ -55,4 +56,21 @@ export interface CommentResponse{
 }
 export interface SubCommentResponse{
     subComments:SubComment[]
+}
+
+
+// store
+export interface searchsimplegamelistResponse{
+    success: boolean;
+    simplegamelist:simplegame[];
+}
+export interface simplegamelistResponse{
+    success: boolean;
+    simplegamelist:simplegame[];
+}
+
+
+export interface storeShowImgResponse{
+    success: boolean;
+    storeShowImg?:string[];
 }

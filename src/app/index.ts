@@ -1,5 +1,7 @@
 import express, { Application, Request, Response, NextFunction } from 'express'
 import { COMMENT,BASE_COMMENT } from './comment';
+import { detailedGame, simpleGame ,storeShowImg} from './gamelist';
+import { detailedgame } from './interface/game';
 import { POST } from './post';
 import { POST_CARD } from './postcard';
 import { TOPIC_CARD } from './TopicCard';
@@ -27,6 +29,12 @@ const TYPE:{[key:string]:Function} ={
     'GetCommentList':CommentList,
     'GetSubCommentList':SubCommentList,
     'UploadPost':UploadPost,
+    'searchSimpleGame':searchSimpleGame,
+    'getSimpleGame':getSimpleGame,
+    'getstoreShowImg':getstoreShowImg,
+    'getdetailedgame':getdetailedgame,
+    'addgame':addgame,
+    'buygame':buygame
 };
 
 app.post('/api',(req:Request, res:Response,next:NextFunction) =>main(req,res,next));
@@ -125,6 +133,45 @@ function UploadPost(req:Request, res:Response){
         success:true,
     })
 }
+
+//store
+function searchSimpleGame(req:Request, res:Response) {
+    res.json({
+        simplegamelist:simpleGame
+    })
+}
+
+function getSimpleGame(req:Request, res:Response) {
+    res.json({
+        simplegamelist:simpleGame
+    })
+}
+
+
+function getstoreShowImg(req:Request, res:Response){
+    res.json({
+        storeShowImg:storeShowImg
+    })
+}
+
+
+function getdetailedgame(req:Request, res:Response){
+    res.json({
+        detailedgame:detailedGame[0]
+    })
+}
+function addgame(req:Request, res:Response){
+    res.json({
+        success:true
+    })
+}
+
+function buygame(req:Request, res:Response){
+    res.json({
+        success:true
+    })
+}
+
 
 app.listen(port,()=>{
     console.log(`white box server listening at http://localhost:${port}`)

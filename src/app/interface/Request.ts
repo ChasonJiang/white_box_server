@@ -75,3 +75,14 @@ export interface SimpleGameSearchRequestParams{
 export interface SearchRequestParams{
     content:string;
 }
+
+
+
+//store
+export interface searchSimpleGameRequestParams{
+    content:string;
+}
+export interface SimpleGameRequestParams{
+    number:number;
+}
+
