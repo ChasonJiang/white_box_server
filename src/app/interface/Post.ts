@@ -7,7 +7,7 @@ export interface PostInfo{
     // post id
     pid:number;
     releaseTime:string;
-    topic:Topic;
+    topic:Topic[];
 }
 
 export interface PostCard extends PostInfo{
