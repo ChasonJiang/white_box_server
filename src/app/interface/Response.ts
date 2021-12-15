@@ -22,7 +22,10 @@ export interface PostCardDetailIndexResponse{
     pid: number[];
 }
 export interface PostCardDetailResponse{
-    postCardsDetail: PostCardDetail[];
+    data:{
+        postCardsDetail: PostCardDetail,
+        userCard: UserCard
+    }[];
 }
 
 export interface UserDetailsResponse{

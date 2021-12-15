@@ -34,5 +34,5 @@ export interface Post extends PostInfo{
 }
 
 export interface PostCardDetail extends Post{
-    userCard:UserCard;
+
 }
