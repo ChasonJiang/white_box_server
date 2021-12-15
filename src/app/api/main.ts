@@ -7,7 +7,7 @@ export const TYPE:{[key:string]:Function} ={
     'GetPostCardIndexList':Post.PostCardIndexList,
     'GetPostCardDetailIndexList':Post.PostCardDetailIndexList,
     'GetPostCardDetailList':Post.PostCardDetailList,
-    'GetPost':Post.Post,
+    'GetPost':Post.getPost,
     'GetTopicCardIndexList':Topic.TopicCardIndexList,
     'SearchTopicCardList':Topic.SearchTopicCardList,
     'GetTopicCardList':Topic.TopicCardList,

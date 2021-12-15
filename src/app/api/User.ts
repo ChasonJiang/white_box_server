@@ -20,17 +20,14 @@ function SignUp(db_pool:any, req:Request, res:Response){
 
 }
 function LogIn(db_pool:any, req:Request, res:Response){
-
-
     db_pool.getConnection((err:any,conn:any)=>{
         if (err){throw err;}
-        // let body = req.body.body;
-        // console.log(req.body.body.pwd);
-        conn.query("select * from account where uid=? and pwd=?",[req.body.head.uid,req.body.body.pwd],(err:any,result:any,fields:any)=>{
-            if(err){throw err;}
-            // console.log(result[0])
+        let uid:number=req.body.head.uid;
+        let pwd:string=req.body.body.pwd;
+
+        conn.query("select * from account where uid=? and pwd=?",[uid,pwd],(err:any,result:any,fields:any)=>{
             if(!(result[0]===undefined)){
-                conn.query("select * from user where uid=?",req.body.head.uid,(err:any,result:any,fields:any)=>{
+                conn.query("select * from user where uid=?",uid,(err:any,result:any,fields:any)=>{
                     // if(err){throw err;}
                     // console.log(result);
                     let _res:LoginResponse={
@@ -43,17 +40,14 @@ function LogIn(db_pool:any, req:Request, res:Response){
                         }as UserInfo
                     };
                     res.json(_res);
-                })
-                // conn.release();
-                // // Handle error after the release.
-                // if (err) throw err;
+                });
             }else{
                 res.json({
                     success: false,
                     message:"账号或密码错误！"
                 });
             }
-            // console.log(fields);
+
             // When done with the connection, release it.
             conn.release();
             // Handle error after the release.
