@@ -29,11 +29,17 @@ function PostCardIndexList(db_pool:any, req:Request, res:Response){
                 }
                 // console.log(pids);
                 let _res:PostCardIndexResponse={
+                    success: true,
                     pid:pids
                 }
                 res.json(_res);
                  
              }else{
+                let _res:PostCardIndexResponse={
+                    success: false,
+                    message: "PostCardIndexList 查询失败！"
+                }
+                res.json(_res);
                  console.log("PostCardIndexList 查询失败！")
              }
             // When done with the connection, release it.
@@ -104,12 +110,18 @@ function PostCardDetailIndexList(db_pool:any, req:Request, res:Response){
                 }
                 // console.log(pids);
                 let _res:PostCardDetailIndexResponse={
+                    success:true,
                     pid:pids
                 }
                 res.json(_res);
                  
              }else{
-                 console.log("未查询到此PostCardDetailIndexList");
+                let _res:PostCardDetailIndexResponse={
+                    success:false,
+                    message:"未查询到此PostCardDetailIndexList"
+                }
+                res.json(_res);
+                console.log("未查询到此PostCardDetailIndexList");
              }
             // When done with the connection, release it.
             conn.release();

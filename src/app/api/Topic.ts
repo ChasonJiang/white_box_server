@@ -22,11 +22,17 @@ function TopicCardIndexList(db_pool:any, req:Request, res:Response){
                 }
                 // console.log(pids);
                 let _res:TopicCardIndexResponse={
+                    success:true,
                     tid:tids
                 };
                 res.json(_res);
                  
              }else{
+                let _res:TopicCardIndexResponse={
+                    success:false,
+                    message:"TopicCardIndexList 查询失败！"
+                };
+                res.json(_res);
                  console.log("TopicCardIndexList 查询失败！")
              }
             // When done with the connection, release it.
