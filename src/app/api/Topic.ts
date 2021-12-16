@@ -1,5 +1,4 @@
 import { Request, Response, NextFunction } from 'express'
-import { TOPIC_CARD } from '../TopicCard';
 
 export {
     TopicCardIndexList,
@@ -20,7 +19,7 @@ function SearchTopicCardList(db_pool:any, req:Request, res:Response){
 }
 
 function TopicCardList(db_pool:any, req:Request, res:Response){
-    res.json({
-        topicCards:TOPIC_CARD,
-    })
+    // res.json({
+    //     topicCards:TOPIC_CARD,
+    // })
 }

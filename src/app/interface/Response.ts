@@ -1,6 +1,7 @@
 import { Post, PostCard, PostCardDetail } from "./Post";
 import { TopicCard } from "./Topic";
 import { UserCard, UserInfo } from "./User";
+import { detailedgame, simplegame } from "./game";
 import { Comment,SubComment } from "./Comment";
 export interface PostResponse{
     post: Post;
@@ -8,7 +9,7 @@ export interface PostResponse{
 }
 
 export interface PostCardIndexResponse{
-    pid: number[];
+    pid: string[];
 }
 
 export interface PostCardResponse{
@@ -16,10 +17,10 @@ export interface PostCardResponse{
 }
 
 export interface PostCardIndexResponse{
-    pid: number[];
+    pid: string[];
 }
 export interface PostCardDetailIndexResponse{
-    pid: number[];
+    pid: string[];
 }
 export interface PostCardDetailResponse{
     data:{
@@ -37,7 +38,7 @@ export interface UserDetailsResponse{
 export interface PostSearchResponse{
     success: boolean;
     message?: string;
-    pid?: number[];
+    pid?: string[];
 }
 
 export interface TopicCardIndexResponse{
@@ -49,7 +50,7 @@ export interface TopicCardResponse{
 }
 
 export interface CommentIndexResponse{
-    cid:number[];
+    cid:string[];
 }
 
 export interface CommentResponse{
@@ -63,6 +64,38 @@ export interface UploadPostResponse{
     message?: string;
 }
 export interface UploadCommentResponse{
+    success: boolean;
+    message?: string;
+}
+
+// store
+//查询
+export interface searchsimplegamelistResponse{
+    success: boolean;
+    simplegamelist?:simplegame[];
+}
+//store三个模块
+export interface simplegamelistResponse{
+    success: boolean;
+    simplegamelist?:simplegame[];
+}
+//store的展示游戏图片
+export interface storeShowImgResponse{
+    success: boolean;
+    storeShowImg?:string[];
+}
+
+export interface getdetailedgameResponse{
+    success: boolean;
+    detailedgame:detailedgame;
+}
+
+export interface addresultResponse{
+    success: boolean;
+    message?: string;
+}
+
+export interface buygameresultResponse{
     success: boolean;
     message?: string;
 }

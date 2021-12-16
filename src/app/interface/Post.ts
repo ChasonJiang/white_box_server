@@ -5,7 +5,7 @@ export interface PostInfo{
     // user id
     uid:number;
     // post id
-    pid:number;
+    pid:string;
     releaseTime:string;
     topic:Topic[];
 }
@@ -34,5 +34,5 @@ export interface Post extends PostInfo{
 }
 
 export interface PostCardDetail extends Post{
-
+    // userCard:UserCard;
 }

@@ -1,9 +1,9 @@
 import { UserBaseInfo,UserCard } from './User'
 
 export interface SubComment{
-    pid: number;
-    cid:number;
-    sub_cid: number;
+    pid: string;
+    cid:string;
+    sub_cid: string;
     userInfo:UserBaseInfo,
     replyTo?:UserBaseInfo,
     commentContent:string,
@@ -11,10 +11,10 @@ export interface SubComment{
 }
 
 export interface Comment{
-    pid:number;
-    cid:number,
+    pid:string;
+    cid:string,
     userCard:UserCard,
-    sub_cid:number[],
+    sub_cid:string[],
     // reply:SubComment[];
     // replyTo?:UserBaseInfo,
     commentContent:string,

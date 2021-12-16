@@ -16,6 +16,7 @@ export const TYPE:{[key:string]:Function} ={
     'GetCommentIndexList':Comment.CommentIndexList,
     'GetCommentList':Comment.CommentList,
     'GetSubCommentList':Comment.SubCommentList,
+    'UploadComment':Comment.UploadComment,
     'UploadPost':Post.UploadPost,
     'SignUp':User.SignUp,
     'LogIn':User.LogIn,

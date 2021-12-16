@@ -2,9 +2,6 @@
 import { Request, Response, NextFunction } from 'express'
 import { PostCardDetailRequestParams, PostCardRequestParams, PostRequestParams, Requester, RequestHead, UploadPostRequestParams } from '../interface/Request';
 import { PostCardDetailIndexResponse, PostCardDetailResponse, PostCardIndexResponse, PostCardResponse, PostResponse, UploadPostResponse } from '../interface/Response';
-import { POST } from '../post';
-import { POST_CARD } from '../postcard';
-import { USER_CARD_INFO } from '../user';
 import { Post, PostCard, PostCardDetail } from '../interface/Post'
 import { Topic } from '../interface/Topic';
 import { UserCard } from '../interface/User';
@@ -25,7 +22,7 @@ function PostCardIndexList(db_pool:any, req:Request, res:Response){
         if (err){throw err;}
         conn.query(sql1,(err:any,result:any,fields:any)=>{
              if (result.length!=0){
-                let pids:number[] = [];
+                let pids:string[] = [];
                 for(let item of result){
                     pids.push(item.pid);
                     
@@ -51,7 +48,7 @@ function PostCardIndexList(db_pool:any, req:Request, res:Response){
 function PostCardList(db_pool:any, req:Request, res:Response){
     let _req:Requester<PostCardRequestParams> = req.body as Requester<PostCardRequestParams>;
     let sql1_params=[(_req.body as PostCardRequestParams).pid,];
-    let sql1="select pid, uid, title, topic, time, cover, num_comment from post where pid in "+db_pool.escape(sql1_params)+" and is_paper=1 ;";
+    let sql1="select pid, uid, topic, title, time, cover, num_comment from post where pid in "+db_pool.escape(sql1_params)+" and is_paper=1 ;";
     // console.log(sql1);
     db_pool.getConnection((err:any,conn:any)=>{
         if(err){throw err;}
@@ -69,7 +66,9 @@ function PostCardList(db_pool:any, req:Request, res:Response){
                         topic:JSON.parse(item.topic),
                         numberOfComments:item.num_comment
                     };
+                    console.log(postCard);
                     postCards.push(postCard);
+
                 }
                 // console.log([(_req.body as PostCardRequestParams).pid,]);
                 // console.log(result.length);
@@ -98,7 +97,7 @@ function PostCardDetailIndexList(db_pool:any, req:Request, res:Response){
         if (err){throw err;}
         conn.query(sql1,(err:any,result:any,fields:any)=>{
              if (result.length!=0){
-                let pids:number[] = [];
+                let pids:string[] = [];
                 for(let item of result){
                     pids.push(item.pid);
                     
@@ -186,7 +185,7 @@ function getPost(db_pool:any, req:Request, res:Response){
 
     let _req:Requester<PostRequestParams> =req.body;
     let body:PostRequestParams=_req.body as PostRequestParams;
-    let pid:number = body.pid;
+    let pid:string = body.pid;
     let sql1:string = "select * from post where pid = ?";
     let sql1_params=[pid];
 
@@ -257,13 +256,13 @@ function UploadPost(db_pool:any, req:Request, res:Response){
     let body:UploadPostRequestParams=_req.body as UploadPostRequestParams;
     let uid:number = head.uid as number;
     let post:Post = body.post;
-    // let tid:number[]=[];
-    // for(let item of post.topic){
-    //     tid.push(item.tid);
-    // }
-    // console.log(post);
+    let pid_tid:any=[];
+    for(let item of post.topic){
+        pid_tid.push([post.pid,item.tid]);
+    }
+    console.log(post);
     
-    let sql1_params=[0,uid,JSON.stringify(post.topic),post.content,post.releaseTime,post.isPaper,0,0];
+    let sql1_params=[post.pid,uid,JSON.stringify(post.topic),post.content,post.releaseTime,post.isPaper,0,0];
     if(post.isPaper){
         sql1_params.push(post.coverUrl as string);
         sql1_params.push(post.title as string);
@@ -272,25 +271,44 @@ function UploadPost(db_pool:any, req:Request, res:Response){
         sql1_params.push('');
     }
 
+    console.log(db_pool.escape(pid_tid));
     let sql1="insert into post (pid,uid,topic,post_content,time,is_paper,num_approval,num_comment,cover,title) values (?,?,?,?,?,?,?,?,?,?);";
     
+    let sql2="insert into post_topic_map (pid,tid) values "+db_pool.escape(pid_tid)+" ;";
 
 
     db_pool.getConnection((err:any,conn:any)=>{
         if (err){throw err;}
         conn.query(sql1,sql1_params,(err:any,result:any,fields:any)=>{
-            if (err){throw err;}
-            if(result.insertId){
-                // console.log(result.insertId);
-                res.json({
-                    success: true,
-                }as UploadPostResponse)
-            }else{
-                res.json({
-                    success: false,
-                    message: "上传错误！"
-                }as UploadPostResponse)
-            }
+            if (err) {
+                return conn.rollback(function() {
+                    throw err;
+                });
+                }
+                try{
+                    conn.query(sql2,(err:any,result:any,fields:any)=>{
+                        if (err) {
+                            return conn.rollback(function() {
+                                throw err;
+                            });
+                            }
+                        res.json({
+                            success: true,
+                        }as UploadPostResponse)
+                    });
+                }catch(err) {
+                    console.log(err);
+                    res.json({
+                        success: false,
+                        message: "话题重复！"
+                    })
+                    return conn.rollback(function() {
+                        throw err;
+                    });
+                    
+                }
+
+
             // When done with the connection, release it.
             conn.release();
             // Handle error after the release.

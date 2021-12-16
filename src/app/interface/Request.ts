@@ -1,4 +1,5 @@
-import { HttpHeaders } from "@angular/common/http";
+// import { HttpHeaders } from "@angular/common/http";
+import { detailedgame } from "./game";
 import { Post } from "./Post";
 
 export interface Requester<T>{
@@ -16,23 +17,23 @@ export interface RequestHead{
 
 }
 
-export const httpOptions = {
-    headers: new HttpHeaders({
-      'Content-Type':  'application/json',
-    //   Authorization: 'my-auth-token'
-    })
-  };
+// export const httpOptions = {
+//     headers: new HttpHeaders({
+//       'Content-Type':  'application/json',
+//     //   Authorization: 'my-auth-token'
+//     })
+//   };
 
 
 export interface PostRequestParams{
-    pid: number;
+    pid: string;
 
 }
 export interface UploadPostRequestParams{
     post:Post;
 }
 export interface PostCardRequestParams{
-    pid: number[];
+    pid: string[];
 }
 
 export interface PostCardDetailIndexRequestParams{
@@ -40,7 +41,7 @@ export interface PostCardDetailIndexRequestParams{
 }
 
 export interface PostCardDetailRequestParams{
-    pid: number[];
+    pid: string[];
 }
 // export interface TopicCardIndexRequestParams{
 
@@ -51,17 +52,17 @@ export interface TopicCardRequestParams{
 }
 
 export interface CommentCardIndexRequestParams{
-    pid: number;
+    pid: string;
 }
 export interface CommentCardRequestParams{
-    pid: number;
-    cid:number[];
+    pid: string;
+    cid:string[];
 }
 
 export interface SubCommentRequestParams{
-    pid: number;
-    cid:number;
-    sub_cid:number[];
+    pid: string;
+    cid:string;
+    sub_cid:string[];
 }
 
 export interface PostSearchRequestParams{
@@ -80,12 +81,37 @@ export interface SearchRequestParams{
 }
 
 export interface UploadCommentRequestParams{
-    pid:number;
-    cid?:number;
-    sub_cid?:number;
+    pid:string;
+    cid?:string;
+    sub_cid?:string;
+    reply_to?:number;
     content:string;
 }
 
+
+
+//store
+export interface searchSimpleGameRequestParams{
+    content:string;
+}
+
+
+export interface SimpleGameRequestParams{
+    type:string;
+    index:number;
+}
+
+export interface getdetailedgameRequestParams{
+    gameid:number;
+}
+
+export interface adddetailedgameRequestParams{
+    detailedgame:detailedgame;
+}
+
+export interface buygameRequestParams{
+    gameid:number;
+}
 export interface FollowRequestParams{
     // follower_uid:number;
     follow_uid:number;
@@ -95,13 +121,3 @@ export interface FollowRequestParams{
 export interface LoginRequestParams{
     pwd:string;
 }
-
-
-//store
-export interface searchSimpleGameRequestParams{
-    content:string;
-}
-export interface SimpleGameRequestParams{
-    number:number;
-}
-

@@ -1,13 +1,7 @@
 import { Request, Response, NextFunction } from 'express'
 import { LoginResponse } from '../interface/Response';
 import { UserInfo } from '../interface/User';
-// import { COMMENT,BASE_COMMENT } from '../comment';
-// import { LoginResponse } from '../interface/Response';
-// import { UserInfo } from '../interface/User';
-import { POST } from '../post';
-import { POST_CARD } from '../postcard';
-// import { TOPIC_CARD } from '../TopicCard';
-import { USER_CARD_INFO } from '../user';
+
 
 export{
     SignUp,
