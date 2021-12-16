@@ -1,6 +1,7 @@
 // import { HttpHeaders } from "@angular/common/http";
 import { detailedgame } from "./game";
 import { Post } from "./Post";
+import { UserBaseInfo } from "./User";
 
 export interface Requester<T>{
     head:RequestHead;
@@ -55,13 +56,13 @@ export interface CommentCardIndexRequestParams{
     pid: string;
 }
 export interface CommentCardRequestParams{
-    pid: string;
+    // pid: string;
     cid:string[];
 }
 
 export interface SubCommentRequestParams{
-    pid: string;
-    cid:string;
+    // pid: string;
+    // cid:string;
     sub_cid:string[];
 }
 
@@ -81,11 +82,13 @@ export interface SearchRequestParams{
 }
 
 export interface UploadCommentRequestParams{
+    userInfo:UserBaseInfo;
     pid:string;
     cid?:string;
     sub_cid?:string;
-    reply_to?:number;
+    reply_to?:UserBaseInfo;
     content:string;
+    releaseTime:string;
 }
 
 

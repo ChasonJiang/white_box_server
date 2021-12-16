@@ -66,7 +66,7 @@ function PostCardList(db_pool:any, req:Request, res:Response){
                         topic:JSON.parse(item.topic),
                         numberOfComments:item.num_comment
                     };
-                    console.log(postCard);
+                    // console.log(postCard);
                     postCards.push(postCard);
 
                 }
@@ -78,7 +78,7 @@ function PostCardList(db_pool:any, req:Request, res:Response){
                 console.log("PostCardList is running");
                 res.json(postCardResponse);
             }else{
-                console.log("PostCardList 查询错误！");
+                console.log("未查询到此PostCardList："+sql1_params);
             }
 
             // When done with the connection, release it.
@@ -109,7 +109,7 @@ function PostCardDetailIndexList(db_pool:any, req:Request, res:Response){
                 res.json(_res);
                  
              }else{
-                 console.log("PostCardDetailIndexList 查询失败！")
+                 console.log("未查询到此PostCardDetailIndexList");
              }
             // When done with the connection, release it.
             conn.release();
@@ -164,7 +164,7 @@ function PostCardDetailList(db_pool:any, req:Request, res:Response){
                 // console.log("PostCardList is running");
                 // res.json(postCardResponse);
             }else{
-                console.log("PostCardList 查询错误！");
+                console.log("未查询到此PostCardDetail！"+sql1_params);
             }
 
             // When done with the connection, release it.
@@ -186,7 +186,7 @@ function getPost(db_pool:any, req:Request, res:Response){
     let _req:Requester<PostRequestParams> =req.body;
     let body:PostRequestParams=_req.body as PostRequestParams;
     let pid:string = body.pid;
-    let sql1:string = "select * from post where pid = ?";
+    let sql1:string = "select * from post left join user on post.uid=user.uid where pid = ?";
     let sql1_params=[pid];
 
     db_pool.getConnection((err:any,conn:any)=>{
@@ -208,29 +208,19 @@ function getPost(db_pool:any, req:Request, res:Response){
                     post.coverUrl=result[0].cover;
                     post.title=result[0].title;
                 }
-                let sql2="select * from user where uid=?";
-                let sql2_params = result[0].uid;
-                conn.query(sql2,sql2_params,(err:any,result:any,fields:any)=>{
-                    if(result.length!=0){
-                        let userCard:UserCard ={
-                            uid:result[0].uid,
-                            userName:result[0].name,
-                            userLevel:result[0].level,
-                            avatarUrl:result[0].avatar
-                        };
-                        let _res:PostResponse={
-                            post:post,
-                            userCard:userCard
-                        };
-                        res.json(_res);
-                    }else{
-                        console.log("用户查询出错！");
-                    }
-
-                });
-
+                let userCard:UserCard ={
+                    uid:result[0].uid,
+                    userName:result[0].name,
+                    userLevel:result[0].level,
+                    avatarUrl:result[0].avatar
+                };
+                let _res:PostResponse={
+                    post:post,
+                    userCard:userCard
+                };
+                res.json(_res);
             }else{
-                console.log("帖子查询出错！");
+                console.log("未找到该帖子！");
             }
 
             // When done with the connection, release it.
@@ -260,7 +250,7 @@ function UploadPost(db_pool:any, req:Request, res:Response){
     for(let item of post.topic){
         pid_tid.push([post.pid,item.tid]);
     }
-    console.log(post);
+    // console.log(post);
     
     let sql1_params=[post.pid,uid,JSON.stringify(post.topic),post.content,post.releaseTime,post.isPaper,0,0];
     if(post.isPaper){
@@ -276,38 +266,37 @@ function UploadPost(db_pool:any, req:Request, res:Response){
     
     let sql2="insert into post_topic_map (pid,tid) values "+db_pool.escape(pid_tid)+" ;";
 
+    let sql3_params=[post.pid];
+    let sql3="delete from post where pid = ?";
+
 
     db_pool.getConnection((err:any,conn:any)=>{
         if (err){throw err;}
         conn.query(sql1,sql1_params,(err:any,result:any,fields:any)=>{
             if (err) {
-                return conn.rollback(function() {
-                    throw err;
+                res.json({
+                    success: false,
+                    message: "插入post表失败！"
                 });
+                // return conn.rollback(function() {
+                    throw err;
+                // });
                 }
-                try{
-                    conn.query(sql2,(err:any,result:any,fields:any)=>{
-                        if (err) {
-                            return conn.rollback(function() {
-                                throw err;
-                            });
-                            }
-                        res.json({
-                            success: true,
-                        }as UploadPostResponse)
-                    });
-                }catch(err) {
-                    console.log(err);
+            conn.query(sql2,(err:any,result:any,fields:any)=>{
+                if (err) {
+                    conn.query(sql3,sql3_params,(err:any)=>{if (err) {throw err;}});
                     res.json({
                         success: false,
-                        message: "话题重复！"
-                    })
-                    return conn.rollback(function() {
-                        throw err;
+                        message: "插入post_topic_map失败！"
                     });
-                    
-                }
-
+                    // return conn.rollback(function() {
+                        throw err;
+                    // });
+                    }
+                res.json({
+                    success: true,
+                }as UploadPostResponse);
+            });
 
             // When done with the connection, release it.
             conn.release();
@@ -315,8 +304,7 @@ function UploadPost(db_pool:any, req:Request, res:Response){
             if (err) throw err;
             // Don't use the connection here, it has been returned to the pool.
         });
-
-
     });
+
 }
 
