@@ -39,7 +39,7 @@ function CommentIndexList(db_pool:any, req:Request, res:Response){
                 
             }else{
                 let _res:CommentIndexResponse={
-                    success:true,
+                    success:false,
                     message:"CommentIndexList 查询结果为空"
                 }
                 // console.log(_res);
