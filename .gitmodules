@@ -1,0 +1,3 @@
+[submodule "src/app/interface"]
+	path = src/app/interface
+	url = https://github.com/ChasonJiang/white_box_interface.git
