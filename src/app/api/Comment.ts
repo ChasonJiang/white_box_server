@@ -31,12 +31,19 @@ function CommentIndexList(db_pool:any, req:Request, res:Response){
             }
             // console.log(pids);
             let _res:CommentIndexResponse={
+                success:true,
                 cid:cids
             }
             // console.log(_res);
             res.json(_res);
                 
             }else{
+                let _res:CommentIndexResponse={
+                    success:true,
+                    message:"CommentIndexList 查询结果为空"
+                }
+                // console.log(_res);
+                res.json(_res);
                 console.log("CommentIndexList 查询结果为空！")
             }
             // When done with the connection, release it.
