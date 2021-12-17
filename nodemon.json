@@ -1,0 +1,13 @@
+{
+    "restartable": "rs",
+    "verbose": true,
+    "watch": [
+      "src/"
+    ],
+    "ignore": [
+
+    ],
+    "delay": "1000",
+    "exec": "tsc && node build/app/main.js",
+    "ext": "ts ejs yml json"
+  }

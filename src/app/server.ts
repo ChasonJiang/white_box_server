@@ -1,4 +1,5 @@
 import express, { Application, Request, Response, NextFunction } from 'express'
+import { parentPort } from 'worker_threads';
 import {TYPE} from './api/main';
 
 
@@ -33,6 +34,7 @@ function main(req:Request, res:Response, next:NextFunction){
 
 process.on('uncaughtException',(err)=>{
     console.log(err);
+    // return parentPort.postMessage(err);
 });
 
 process.on('unhandkedRejection',(err)=>{
@@ -41,5 +43,6 @@ process.on('unhandkedRejection',(err)=>{
 
 
 app.listen(port,()=>{
-    console.log(`white box server listening at http://localhost:${port}`)
+    // parentPort.postMessage(`white box server listening at http://localhost:${port}`);
+    console.log(`white box server listening at http://localhost:${port}`);
 });

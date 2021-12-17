@@ -194,6 +194,7 @@ function getPost(db_pool:any, req:Request, res:Response){
     //     post:POST,
     //     userCard:USER_CARD_INFO,
     // });
+    throw new Error;
 
     let _req:Requester<PostRequestParams> =req.body;
     let body:PostRequestParams=_req.body as PostRequestParams;
