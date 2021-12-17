@@ -75,7 +75,7 @@ function getSimpleGame(db_pool: any, req: Request, res: Response) {
         sql1 = "SELECT gid, gameName, imgUrl, gameType, nowPrice, oldPrice, Minimum FROM game   order by onlineTime asc LIMIT ?,? ;";
     }
     // let sql1="select gid, gameName, imgUrl, gameType, nowPrice, oldPrice, Minimum from game where pid in (?) and is_paper=1 ;";
-    let sql1_params = [(_req.body as SimpleGameRequestParams).index * 10, (_req.body as SimpleGameRequestParams).index * 10 + 10];
+    let sql1_params = [(_req.body as SimpleGameRequestParams).index * 10, (_req.body as SimpleGameRequestParams).index * 5 + 5];
     // console.log(sql1_params);
     db_pool.getConnection((err: any, conn: any) => {
         if (err) { throw err; }
