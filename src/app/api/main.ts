@@ -31,4 +31,5 @@ export const TYPE:{[key:string]:Function} ={
     'followgame':followgame,
     'cancelfollowgame':cancelfollowgame,
     'getgamefollowstate':getgamefollowstate,
+    "EditerUserInfo":User.EditerUserInfo,
 };
