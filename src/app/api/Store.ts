@@ -337,7 +337,7 @@ function buygame(db_pool: any, req: Request, res: Response) {
     let _req: Requester<buygameRequestParams> = req.body as Requester<buygameRequestParams>;
 let gid= _req.body?.gameid as number
 console.log(gid)
-let uid= _req.head.uid as number
+let uid= _req.head.uid as string
 let data=new Date();
 let sql1_params =[uid,gid,data]
     let sql1 = "insert into buygame() value(?,?,?)";
@@ -373,7 +373,7 @@ function followgame(db_pool: any, req: Request, res: Response) {
     let _req: Requester<buygameRequestParams> = req.body as Requester<buygameRequestParams>;
 let gid= _req.body?.gameid as number
 
-let uid= _req.head.uid as number
+let uid= _req.head.uid as string
 let data=new Date();
 let sql1_params =[uid,gid,data]
     let sql1 = "insert into followgame() value(?,?,?)";
@@ -409,7 +409,7 @@ function cancelfollowgame(db_pool: any, req: Request, res: Response) {
     let _req: Requester<buygameRequestParams> = req.body as Requester<buygameRequestParams>;
 let gid= _req.body?.gameid as number
 
-let uid= _req.head.uid as number
+let uid= _req.head.uid as string
 
 let sql1_params =[uid,gid]
     let sql1 = "DELETE FROM followgame where uid=? and gid=? ;";
@@ -447,7 +447,7 @@ function getgamefollowstate(db_pool: any, req: Request, res: Response){
     let _req: Requester<getstateRequestParams> = req.body as Requester<getstateRequestParams>;
     let gid= _req.body?.gameid as number
 
-let uid= _req.head.uid as number
+let uid= _req.head.uid as string
     let sql1 = "select * from followgame where uid=? and gid=? ;";
     let sql1_params =[uid,gid]
    

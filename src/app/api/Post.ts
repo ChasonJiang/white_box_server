@@ -194,7 +194,6 @@ function getPost(db_pool:any, req:Request, res:Response){
     //     post:POST,
     //     userCard:USER_CARD_INFO,
     // });
-    throw new Error;
 
     let _req:Requester<PostRequestParams> =req.body;
     let body:PostRequestParams=_req.body as PostRequestParams;
@@ -257,7 +256,7 @@ function UploadPost(db_pool:any, req:Request, res:Response){
     let _req:Requester<UploadPostRequestParams> =req.body;
     let head=_req.head as RequestHead;
     let body:UploadPostRequestParams=_req.body as UploadPostRequestParams;
-    let uid:number = head.uid as number;
+    let uid:string = head.uid as string;
     let post:Post = body.post;
     let pid_tid:any=[];
     for(let item of post.topic){
