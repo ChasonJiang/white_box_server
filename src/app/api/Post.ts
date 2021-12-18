@@ -1,7 +1,7 @@
 
 import { Request, Response, NextFunction } from 'express'
-import { PostCardDetailRequestParams, PostCardRequestParams, PostRequestParams, Requester, RequestHead, UploadPostRequestParams } from '../interface/Request';
-import { PostCardDetailIndexResponse, PostCardDetailResponse, PostCardIndexResponse, PostCardResponse, PostResponse, UploadPostResponse } from '../interface/Response';
+import { PostCardDetailRequestParams, PostCardRequestParams, PostRequestParams, PostSearchRequestParams, Requester, RequestHead, UploadPostRequestParams } from '../interface/Request';
+import { PostCardDetailIndexResponse, PostCardDetailResponse, PostCardIndexResponse, PostCardResponse, PostResponse, PostSearchResponse, UploadPostResponse } from '../interface/Response';
 import { Post, PostCard, PostCardDetail } from '../interface/Post'
 import { Topic } from '../interface/Topic';
 import { UserCard } from '../interface/User';
@@ -154,6 +154,7 @@ function PostCardDetailList(db_pool:any, req:Request, res:Response){
                         numberOfApproval:item.num_approval,
                         numberOfComments:item.num_comment
                     };
+                    // console.log(item.post_content)
                     if(item.is_paper){
                         post.coverUrl=item.cover;
                         post.title=item.title;
@@ -194,7 +195,6 @@ function getPost(db_pool:any, req:Request, res:Response){
     //     post:POST,
     //     userCard:USER_CARD_INFO,
     // });
-    throw new Error;
 
     let _req:Requester<PostRequestParams> =req.body;
     let body:PostRequestParams=_req.body as PostRequestParams;
@@ -248,8 +248,34 @@ function getPost(db_pool:any, req:Request, res:Response){
 }
     
 function SearchPostCardDetail(db_pool:any, req:Request, res:Response){
-    res.json({
-        pid:[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,]
+    let _req: Requester<PostSearchRequestParams> = req.body as Requester<PostSearchRequestParams>;
+    let content = _req.body.content as string;
+    let sql1 = 'select pid from post where post_content REGEXP (?) or title REGEXP (?) ;';
+    let sql1_params=[content,content];
+    db_pool.getConnection((err: any, conn: any) => {
+        if (err) { throw err; }
+        conn.query(sql1, sql1_params, (err: any, result: any, fields: any) => {
+            if (err) { throw err; }
+            if (result.length != 0) {
+                let pids: string[] = [];
+                for (let item of result) {
+                    pids.push(item.pid);
+                }
+                let _res: PostSearchResponse = {
+                    success: true,
+                    pid:pids
+                };
+                console.log("SearchPostCardDetail Success!");
+                res.json(_res);
+            } else {
+                console.log("SearchPostCardDetail 查询错误！");
+            }
+            // When done with the connection, release it.
+            conn.release();
+            // Handle error after the release.
+            if (err) throw err;
+            // Don't use the connection here, it has been returned to the pool.
+        });
     });
 }
 
@@ -257,7 +283,7 @@ function UploadPost(db_pool:any, req:Request, res:Response){
     let _req:Requester<UploadPostRequestParams> =req.body;
     let head=_req.head as RequestHead;
     let body:UploadPostRequestParams=_req.body as UploadPostRequestParams;
-    let uid:number = head.uid as number;
+    let uid:string = head.uid as string;
     let post:Post = body.post;
     let pid_tid:any=[];
     for(let item of post.topic){
@@ -274,7 +300,7 @@ function UploadPost(db_pool:any, req:Request, res:Response){
         sql1_params.push('');
     }
 
-    console.log(db_pool.escape(pid_tid));
+    // console.log(db_pool.escape(pid_tid));
     let sql1="insert into post (pid,uid,topic,post_content,time,is_paper,num_approval,num_comment,cover,title) values (?,?,?,?,?,?,?,?,?,?);";
     
     let sql2="insert into post_topic_map (pid,tid) values "+db_pool.escape(pid_tid)+" ;";

@@ -410,7 +410,11 @@ function cancelfollowgame(db_pool: any, req: Request, res: Response) {
     let _req: Requester<buygameRequestParams> = req.body as Requester<buygameRequestParams>;
 let gid= _req.body?.gameid as number
 
+<<<<<<< HEAD
 let uid= _req.head.uid as string;
+=======
+let uid= _req.head.uid as string
+>>>>>>> 581d82abe30d3dd6fb5a2dbc8c248e3924b5bd16
 
 let sql1_params =[uid,gid]
     let sql1 = "DELETE FROM followgame where uid=? and gid=? ;";

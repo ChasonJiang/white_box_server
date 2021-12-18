@@ -31,5 +31,9 @@ export const TYPE:{[key:string]:Function} ={
     'followgame':followgame,
     'cancelfollowgame':cancelfollowgame,
     'getgamefollowstate':getgamefollowstate,
+<<<<<<< HEAD
     'getgamebuystate':getgamebuystate,
+=======
+    "EditerUserInfo":User.EditerUserInfo,
+>>>>>>> 581d82abe30d3dd6fb5a2dbc8c248e3924b5bd16
 };
