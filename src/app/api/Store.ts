@@ -14,7 +14,8 @@ export {
     updategame,
     followgame,
     cancelfollowgame,
-    getgamefollowstate
+    getgamefollowstate,
+    getgamebuystate
 }
 //store
 function searchSimpleGame(db_pool: any, req: Request, res: Response) {
@@ -337,7 +338,7 @@ function buygame(db_pool: any, req: Request, res: Response) {
     let _req: Requester<buygameRequestParams> = req.body as Requester<buygameRequestParams>;
 let gid= _req.body?.gameid as number
 console.log(gid)
-let uid= _req.head.uid as number
+let uid= _req.head.uid as string
 let data=new Date();
 let sql1_params =[uid,gid,data]
     let sql1 = "insert into buygame() value(?,?,?)";
@@ -373,7 +374,7 @@ function followgame(db_pool: any, req: Request, res: Response) {
     let _req: Requester<buygameRequestParams> = req.body as Requester<buygameRequestParams>;
 let gid= _req.body?.gameid as number
 
-let uid= _req.head.uid as number
+let uid= _req.head.uid as string
 let data=new Date();
 let sql1_params =[uid,gid,data]
     let sql1 = "insert into followgame() value(?,?,?)";
@@ -409,7 +410,7 @@ function cancelfollowgame(db_pool: any, req: Request, res: Response) {
     let _req: Requester<buygameRequestParams> = req.body as Requester<buygameRequestParams>;
 let gid= _req.body?.gameid as number
 
-let uid= _req.head.uid as number
+let uid= _req.head.uid as string;
 
 let sql1_params =[uid,gid]
     let sql1 = "DELETE FROM followgame where uid=? and gid=? ;";
@@ -447,7 +448,7 @@ function getgamefollowstate(db_pool: any, req: Request, res: Response){
     let _req: Requester<getstateRequestParams> = req.body as Requester<getstateRequestParams>;
     let gid= _req.body?.gameid as number
 
-let uid= _req.head.uid as number
+let uid= _req.head.uid as string
     let sql1 = "select * from followgame where uid=? and gid=? ;";
     let sql1_params =[uid,gid]
    
@@ -481,3 +482,48 @@ let uid= _req.head.uid as number
         });
     })
 }
+
+function getgamebuystate(db_pool: any, req: Request, res: Response){
+    
+    let _req: Requester<getstateRequestParams> = req.body as Requester<getstateRequestParams>;
+    let gid= _req.body?.gameid as number
+
+let uid= _req.head.uid as string
+    let sql1 = "select * from buygame where uid=? and gid=? ;";
+    let sql1_params =[uid,gid]
+   
+    db_pool.getConnection((err: any, conn: any) => {
+        if (err) { throw err; }
+        conn.query(sql1, sql1_params, (err: any, result: any, fields: any) => {
+            if (err) { throw err; }
+            if (result.length != 0) {
+              
+                
+                let getgamebuystate: getstateResponse = {
+                    state:true,
+                    success: true
+                };
+                console.log("getgamebuystate is running");
+                res.json(getgamebuystate);
+            } else {
+                let getgamebuystate: getstateResponse = {
+                    state:false,
+                    success: true
+                };
+                console.log("getgamebuystate is running");
+                res.json(getgamebuystate);
+            }
+
+            // When done with the connection, release it.
+            conn.release();
+            // Handle error after the release.
+            if (err) throw err;
+            // Don't use the connection here, it has been returned to the pool.
+        });
+    })
+}
+
+
+
+
+
