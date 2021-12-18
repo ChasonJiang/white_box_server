@@ -1,7 +1,7 @@
 
 import { Request, Response, NextFunction } from 'express'
-import { PostCardDetailRequestParams, PostCardRequestParams, PostRequestParams, Requester, RequestHead, UploadPostRequestParams } from '../interface/Request';
-import { PostCardDetailIndexResponse, PostCardDetailResponse, PostCardIndexResponse, PostCardResponse, PostResponse, UploadPostResponse } from '../interface/Response';
+import { PostCardDetailRequestParams, PostCardRequestParams, PostRequestParams, PostSearchRequestParams, Requester, RequestHead, UploadPostRequestParams } from '../interface/Request';
+import { PostCardDetailIndexResponse, PostCardDetailResponse, PostCardIndexResponse, PostCardResponse, PostResponse, PostSearchResponse, UploadPostResponse } from '../interface/Response';
 import { Post, PostCard, PostCardDetail } from '../interface/Post'
 import { Topic } from '../interface/Topic';
 import { UserCard } from '../interface/User';
@@ -247,8 +247,34 @@ function getPost(db_pool:any, req:Request, res:Response){
 }
     
 function SearchPostCardDetail(db_pool:any, req:Request, res:Response){
-    res.json({
-        pid:[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,]
+    let _req: Requester<PostSearchRequestParams> = req.body as Requester<PostSearchRequestParams>;
+    let content = _req.body.content as string;
+    let sql1 = 'select pid from post where post_content REGEXP (?) or title REGEXP (?) ;';
+    let sql1_params=[content,content];
+    db_pool.getConnection((err: any, conn: any) => {
+        if (err) { throw err; }
+        conn.query(sql1, sql1_params, (err: any, result: any, fields: any) => {
+            if (err) { throw err; }
+            if (result.length != 0) {
+                let pids: string[] = [];
+                for (let item of result) {
+                    pids.push(item.pid);
+                }
+                let _res: PostSearchResponse = {
+                    success: true,
+                    pid:pids
+                };
+                console.log("SearchPostCardDetail Success!");
+                res.json(_res);
+            } else {
+                console.log("searchsimplegamelist 查询错误！");
+            }
+            // When done with the connection, release it.
+            conn.release();
+            // Handle error after the release.
+            if (err) throw err;
+            // Don't use the connection here, it has been returned to the pool.
+        });
     });
 }
 
