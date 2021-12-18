@@ -154,6 +154,7 @@ function PostCardDetailList(db_pool:any, req:Request, res:Response){
                         numberOfApproval:item.num_approval,
                         numberOfComments:item.num_comment
                     };
+                    // console.log(item.post_content)
                     if(item.is_paper){
                         post.coverUrl=item.cover;
                         post.title=item.title;
@@ -267,7 +268,7 @@ function SearchPostCardDetail(db_pool:any, req:Request, res:Response){
                 console.log("SearchPostCardDetail Success!");
                 res.json(_res);
             } else {
-                console.log("searchsimplegamelist 查询错误！");
+                console.log("SearchPostCardDetail 查询错误！");
             }
             // When done with the connection, release it.
             conn.release();
@@ -299,7 +300,7 @@ function UploadPost(db_pool:any, req:Request, res:Response){
         sql1_params.push('');
     }
 
-    console.log(db_pool.escape(pid_tid));
+    // console.log(db_pool.escape(pid_tid));
     let sql1="insert into post (pid,uid,topic,post_content,time,is_paper,num_approval,num_comment,cover,title) values (?,?,?,?,?,?,?,?,?,?);";
     
     let sql2="insert into post_topic_map (pid,tid) values "+db_pool.escape(pid_tid)+" ;";
