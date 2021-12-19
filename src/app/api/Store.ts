@@ -70,13 +70,13 @@ function getSimpleGame(db_pool: any, req: Request, res: Response) {
         sql1 = "SELECT gid, gameName, imgUrl, gameType, nowPrice, oldPrice, Minimum FROM game  order by gid asc LIMIT ?,?;";
     }
     else if (type == "为您推荐") {
-        sql1 = "SELECT gid, gameName, imgUrl, gameType, nowPrice, oldPrice, Minimum FROM game  order by nowPrice asc LIMIT ?,? ;";
+        sql1 = "SELECT gid, gameName, imgUrl, gameType, nowPrice, oldPrice, Minimum FROM game  order by nowPrice desc LIMIT ?,? ;";
     }
     else {
         sql1 = "SELECT gid, gameName, imgUrl, gameType, nowPrice, oldPrice, Minimum FROM game   order by onlineTime asc LIMIT ?,? ;";
     }
     // let sql1="select gid, gameName, imgUrl, gameType, nowPrice, oldPrice, Minimum from game where pid in (?) and is_paper=1 ;";
-    let sql1_params = [(_req.body as SimpleGameRequestParams).index * 10, (_req.body as SimpleGameRequestParams).index * 5 + 5];
+    let sql1_params = [(_req.body as SimpleGameRequestParams).index * 5, (_req.body as SimpleGameRequestParams).index * 5 + 5];
     // console.log(sql1_params);
     db_pool.getConnection((err: any, conn: any) => {
         if (err) { throw err; }
@@ -118,7 +118,7 @@ function getSimpleGame(db_pool: any, req: Request, res: Response) {
 
 function getstoreShowImg(db_pool: any, req: Request, res: Response) {
     let _req: Requester<null> = req.body as Requester<null>;
-    let sql1 = "select storeshowimg from storeshowimg ";
+    let sql1 = "select imgUrl from game order by nowPrice desc LIMIT 1,5";
     
     // console.log(sql1_params);
     db_pool.getConnection((err: any, conn: any) => {
@@ -128,8 +128,8 @@ function getstoreShowImg(db_pool: any, req: Request, res: Response) {
             if (result.length != 0) {
                 let storeshowimg: string[] = [];
                 for (let item of result) {
-                    let img: string = item.storeshowimg
-                    
+                    let img: string = item.imgUrl
+                
                     storeshowimg.push(img);
                 }
                 let storeShowimgResponse: storeShowImgResponse = {
@@ -410,11 +410,7 @@ function cancelfollowgame(db_pool: any, req: Request, res: Response) {
     let _req: Requester<buygameRequestParams> = req.body as Requester<buygameRequestParams>;
 let gid= _req.body?.gameid as number
 
-<<<<<<< HEAD
-let uid= _req.head.uid as string;
-=======
 let uid= _req.head.uid as string
->>>>>>> 581d82abe30d3dd6fb5a2dbc8c248e3924b5bd16
 
 let sql1_params =[uid,gid]
     let sql1 = "DELETE FROM followgame where uid=? and gid=? ;";
