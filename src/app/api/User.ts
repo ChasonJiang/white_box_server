@@ -10,8 +10,9 @@ export{
     SignUp,
     LogIn,
     LogOut,
-    EditerUserInfo
-
+    EditerUserInfo,
+    DestroyAccount,
+    LoginValidation,
 };
 
 function SignUp(db_pool:any, req:Request, res:Response){
@@ -175,12 +176,13 @@ function EditerUserInfo(db_pool:any, req:Request, res:Response){
 
 
 function LogIn(db_pool:any, req:Request, res:Response){
+    let uid:string=req.body.body.uid;
+    let pwd:string=req.body.body.pwd;
+
+
     db_pool.getConnection((err:any,conn:any)=>{
         if (err){throw err;}
-        let uid:string=req.body.body.uid;
-        let pwd:string=req.body.body.pwd;
-        let nowTime = new Date().getTime.toString();
-        let token:string=sha256(uid+nowTime+"white_box_server");
+
         conn.query("select * from account where uid=? and pwd=?",[uid,pwd],(err:any,result:any,fields:any)=>{
             if (err) { 
                 res.json({
@@ -202,6 +204,8 @@ function LogIn(db_pool:any, req:Request, res:Response){
                     }
                     // console.log(result);
                     if(result.length!=0){
+                        let nowTime = new Date().getTime().toString();
+                        let token:string=sha256(uid+nowTime);
                         let _res:LoginResponse={
                             success: true,
                             token:token,
@@ -212,7 +216,7 @@ function LogIn(db_pool:any, req:Request, res:Response){
                                 userLevel:result[0].level,
                             }as UserInfo
                         };
-                        conn.query("update account set token = ?",token,(err:any,result:any,fields:any)=>{
+                        conn.query("update account set token = ? where uid = ?",[token,uid],(err:any,result:any,fields:any)=>{
                             if (err) {
                                 res.json({
                                     success: false,
@@ -223,6 +227,7 @@ function LogIn(db_pool:any, req:Request, res:Response){
                             if(result.affectedRows!=0){
                                 res.json(_res);
                                 console.log("登录成功！");
+                                console.log(token);
                             }else{
                                 res.json({
                                     success: false,
@@ -249,5 +254,147 @@ function LogIn(db_pool:any, req:Request, res:Response){
 
 }
 function LogOut(db_pool:any, req:Request, res:Response){
+    let uid:string=req.body.body.uid;
+    let pwd:string=req.body.body.pwd;
+    let token:string=req.body.body.token;
+    db_pool.getConnection((err:any,conn:any)=>{
+        if (err){throw err;}
 
+        conn.query("select * from account where uid=? and pwd=? and token=? ;",[uid,pwd,token],(err:any,result:any,fields:any)=>{
+            if (err) { 
+                res.json({
+                    success: false,
+                    message:"登出失败！"
+                });
+                throw err; 
+            }
+            // console.log([uid,pwd])
+            // console.log(result);
+            if(!(result[0]==undefined || result[0]==null || result[0]=='')){
+                conn.query("update account set token = ? where uid=?",[null,uid],(err:any,result:any,fields:any)=>{
+                    if (err) {
+                        res.json({
+                            success: false,
+                            message:"登出失败！"
+                        });
+                        throw err; 
+                    }
+                    if(result.affectedRows!=0){
+                        res.json({
+                            success:true,
+                            message:"登出成功！"
+                        });
+                        console.log("登出成功！");
+
+                    }else{
+                        res.json({
+                            success: false,
+                            message:"登出失败！"
+                        });
+                    }
+                });
+            }
+            // When done with the conn, release it.
+            conn.release();
+            // Handle error after the release.
+            if (err) throw err;
+            // Don't use the conn here, it has been returned to the pool.
+        });
+    
+    });
+}
+
+function DestroyAccount(db_pool:any, req:Request, res:Response){
+    let uid:string=req.body.body.uid;
+    let pwd:string=req.body.body.pwd;
+    let token:string=req.body.body.token;
+    db_pool.getConnection((err:any,conn:any)=>{
+        if (err){throw err;}
+
+        conn.query("select * from account where uid=? and pwd=? and token=? ;",[uid,pwd,token],(err:any,result:any,fields:any)=>{
+            if (err) { 
+                res.json({
+                    success: false,
+                    message:"销毁账户失败！"
+                });
+                throw err; 
+            }
+            // console.log([uid,pwd])
+            // console.log(result);
+            if(!(result[0]==undefined || result[0]==null || result[0]=='')){
+                conn.query("delete from account where uid=?",[uid],(err:any,result:any,fields:any)=>{
+                    if (err) {
+                        res.json({
+                            success: false,
+                            message:"销毁账户失败！"
+                        });
+                        throw err; 
+                    }
+                    if(result.affectedRows!=0){
+                        res.json({
+                            success:true,
+                            message:"销毁账户成功！"
+                        });
+                        console.log("销毁账户成功！");
+
+                    }else{
+                        res.json({
+                            success: false,
+                            message:"销毁账户失败！"
+                        });
+                    }
+                });
+            }
+            // When done with the conn, release it.
+            conn.release();
+            // Handle error after the release.
+            if (err) throw err;
+            // Don't use the conn here, it has been returned to the pool.
+        });
+    
+    });
+
+}
+
+function LoginValidation(db_pool:any, req:Request, res:Response){
+    let uid:string=req.body.body.uid;
+    let token:string=req.body.body.token;
+    db_pool.getConnection((err:any,conn:any)=>{
+        if (err){throw err;}
+
+        conn.query("select * from account where uid=? ;",[uid],(err:any,result:any,fields:any)=>{
+            if (err) { 
+                res.json({
+                    success: false,
+                    message:"验证失败！"
+                });
+                throw err; 
+            }
+            if(!(result[0]==undefined || result[0]==null || result[0]=='')){
+                if(result[0].token==token){
+                    res.json({
+                        success: true,
+                        message:"该账户已登录"
+                    });
+                }else{
+                    res.json({
+                        success: false,
+                        message:"该账户已在其他设备登录"
+                    });
+                }
+
+            }else{
+                res.json({
+                    success: false,
+                    message:"该账户未登录"
+                });
+            }
+            // When done with the conn, release it.
+            conn.release();
+            // Handle error after the release.
+            if (err) throw err;
+            // Don't use the conn here, it has been returned to the pool.
+        });
+    
+    });
 }
