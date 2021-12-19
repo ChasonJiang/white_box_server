@@ -12,7 +12,7 @@ const db_pool=mysql.createPool({
     user     : 'white_box',
     password : 'Project@white_box_410',
     database : 'white_box',
-    connectionLimit : 100,
+    connectionLimit : 10,
 });
 
 app.use(express.json({'limit':'100mb'}));

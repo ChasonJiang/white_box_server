@@ -255,12 +255,12 @@ function LogIn(db_pool:any, req:Request, res:Response){
 }
 function LogOut(db_pool:any, req:Request, res:Response){
     let uid:string=req.body.body.uid;
-    let pwd:string=req.body.body.pwd;
+    // let pwd:string=req.body.body.pwd;
     let token:string=req.body.body.token;
     db_pool.getConnection((err:any,conn:any)=>{
         if (err){throw err;}
 
-        conn.query("select * from account where uid=? and pwd=? and token=? ;",[uid,pwd,token],(err:any,result:any,fields:any)=>{
+        conn.query("select * from account where uid=? and token=? ;",[uid,token],(err:any,result:any,fields:any)=>{
             if (err) { 
                 res.json({
                     success: false,
