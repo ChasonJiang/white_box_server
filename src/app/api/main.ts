@@ -36,5 +36,6 @@ export const TYPE:{[key:string]:Function} ={
     "EditerUserInfo":User.EditerUserInfo,
     "DestroyAccount":User.DestroyAccount,
     "LoginValidation":User.LoginValidation,
-    
+    "GetMoments":User.GetMoments,
+    "GetMomentIndexList":User.GetMomentIndexList
 };

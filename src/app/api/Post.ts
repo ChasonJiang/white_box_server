@@ -53,8 +53,8 @@ function PostCardIndexList(db_pool:any, req:Request, res:Response){
 
 function PostCardList(db_pool:any, req:Request, res:Response){
     let _req:Requester<PostCardRequestParams> = req.body as Requester<PostCardRequestParams>;
-    let sql1_params=[(_req.body as PostCardRequestParams).pid,];
-    let sql1="select pid, uid, topic, title, time, cover, num_comment from post where pid in "+db_pool.escape(sql1_params)+" and is_paper=1 ;";
+    let sql1_params=[[(_req.body as PostCardRequestParams).pid]];
+    let sql1="select * from post where pid in ? and is_paper=1 ;";
     // console.log(sql1);
     db_pool.getConnection((err:any,conn:any)=>{
         if(err){throw err;}
