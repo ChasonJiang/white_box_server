@@ -126,7 +126,7 @@ function getSimpleGame(db_pool: any, req: Request, res: Response) {
 
 function getstoreShowImg(db_pool: any, req: Request, res: Response) {
     let _req: Requester<null> = req.body as Requester<null>;
-    let sql1 = "select imgUrl from game order by nowPrice desc LIMIT 1,5";
+    let sql1 = "select gid,imgUrl from game order by nowPrice desc LIMIT 1,5";
     
     // console.log(sql1_params);
     db_pool.getConnection((err: any, conn: any) => {
@@ -135,13 +135,16 @@ function getstoreShowImg(db_pool: any, req: Request, res: Response) {
             if (err) { throw err; }
             if (result.length != 0) {
                 let storeshowimg: string[] = [];
+                let gidlist:number[]=[];
                 for (let item of result) {
                     let img: string = item.imgUrl
-                
+                let gid:number = item.gid
                     storeshowimg.push(img);
+                    gidlist.push(gid);
                 }
                 let storeShowimgResponse: storeShowImgResponse = {
                     storeShowImg: storeshowimg,
+                    gid:gidlist,
                     success: true
                 };
                 console.log("getstoreShowImg is running");
