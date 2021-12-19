@@ -2,7 +2,7 @@ import * as Post from './Post';
 import * as Topic from './Topic';
 import * as Comment from './Comment';
 import * as User from './User';
-import { addgame, buygame, cancelfollowgame, followgame, getdetailedgame, getgamefollowstate, getSimpleGame, getstoreShowImg, searchSimpleGame, updategame ,getgamebuystate} from './Store';
+import * as Store from './Store';
 export const TYPE:{[key:string]:Function} ={
     'GetPostCardList':Post.PostCardList,
     'GetPostCardIndexList':Post.PostCardIndexList,
@@ -21,18 +21,20 @@ export const TYPE:{[key:string]:Function} ={
     'SignUp':User.SignUp,
     'LogIn':User.LogIn,
     'LogOut':User.LogOut,
-    'searchSimpleGame':searchSimpleGame,
-    'getSimpleGame':getSimpleGame,
-    'getstoreShowImg':getstoreShowImg,
-    'getdetailedgame':getdetailedgame,
-    'addgame':addgame,
-    'buygame':buygame,
-    'updategame':updategame,
-    'followgame':followgame,
-    'cancelfollowgame':cancelfollowgame,
-    'getgamefollowstate':getgamefollowstate,
-    'getgamebuystate':getgamebuystate,
+    'searchSimpleGame':Store.searchSimpleGame,
+    'getSimpleGame':Store.getSimpleGame,
+    'getstoreShowImg':Store.getstoreShowImg,
+    'getdetailedgame':Store.getdetailedgame,
+    'addgame':Store.addgame,
+    'buygame':Store.buygame,
+    'updategame':Store.updategame,
+    'followgame':Store.followgame,
+    'cancelfollowgame':Store.cancelfollowgame,
+    'getgamefollowstate':Store.getgamefollowstate,
+    'getgamebuystate':Store.getgamebuystate,
+    "getGamelibrary":Store.getGamelibrary,
     "EditerUserInfo":User.EditerUserInfo,
     "DestroyAccount":User.DestroyAccount,
-    "LoginValidation":User.LoginValidation
+    "LoginValidation":User.LoginValidation,
+    
 };
