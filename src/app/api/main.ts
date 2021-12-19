@@ -2,7 +2,7 @@ import * as Post from './Post';
 import * as Topic from './Topic';
 import * as Comment from './Comment';
 import * as User from './User';
-import { addgame, buygame, cancelfollowgame, followgame, getdetailedgame, getgamefollowstate, getSimpleGame, getstoreShowImg, searchSimpleGame, updategame } from './Store';
+import { addgame, buygame, cancelfollowgame, followgame, getdetailedgame, getgamefollowstate, getSimpleGame, getstoreShowImg, searchSimpleGame, updategame ,getgamebuystate} from './Store';
 export const TYPE:{[key:string]:Function} ={
     'GetPostCardList':Post.PostCardList,
     'GetPostCardIndexList':Post.PostCardIndexList,
@@ -31,6 +31,7 @@ export const TYPE:{[key:string]:Function} ={
     'followgame':followgame,
     'cancelfollowgame':cancelfollowgame,
     'getgamefollowstate':getgamefollowstate,
+    'getgamebuystate':getgamebuystate,
     "EditerUserInfo":User.EditerUserInfo,
     "DestroyAccount":User.DestroyAccount,
     "LoginValidation":User.LoginValidation

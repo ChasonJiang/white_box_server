@@ -14,7 +14,8 @@ export {
     updategame,
     followgame,
     cancelfollowgame,
-    getgamefollowstate
+    getgamefollowstate,
+    getgamebuystate
 }
 //store
 function searchSimpleGame(db_pool: any, req: Request, res: Response) {
@@ -69,13 +70,13 @@ function getSimpleGame(db_pool: any, req: Request, res: Response) {
         sql1 = "SELECT gid, gameName, imgUrl, gameType, nowPrice, oldPrice, Minimum FROM game  order by gid asc LIMIT ?,?;";
     }
     else if (type == "为您推荐") {
-        sql1 = "SELECT gid, gameName, imgUrl, gameType, nowPrice, oldPrice, Minimum FROM game  order by nowPrice asc LIMIT ?,? ;";
+        sql1 = "SELECT gid, gameName, imgUrl, gameType, nowPrice, oldPrice, Minimum FROM game  order by nowPrice desc LIMIT ?,? ;";
     }
     else {
         sql1 = "SELECT gid, gameName, imgUrl, gameType, nowPrice, oldPrice, Minimum FROM game   order by onlineTime asc LIMIT ?,? ;";
     }
     // let sql1="select gid, gameName, imgUrl, gameType, nowPrice, oldPrice, Minimum from game where pid in (?) and is_paper=1 ;";
-    let sql1_params = [(_req.body as SimpleGameRequestParams).index * 10, (_req.body as SimpleGameRequestParams).index * 5 + 5];
+    let sql1_params = [(_req.body as SimpleGameRequestParams).index * 5, (_req.body as SimpleGameRequestParams).index * 5 + 5];
     // console.log(sql1_params);
     db_pool.getConnection((err: any, conn: any) => {
         if (err) { throw err; }
@@ -117,7 +118,7 @@ function getSimpleGame(db_pool: any, req: Request, res: Response) {
 
 function getstoreShowImg(db_pool: any, req: Request, res: Response) {
     let _req: Requester<null> = req.body as Requester<null>;
-    let sql1 = "select storeshowimg from storeshowimg ";
+    let sql1 = "select imgUrl from game order by nowPrice desc LIMIT 1,5";
     
     // console.log(sql1_params);
     db_pool.getConnection((err: any, conn: any) => {
@@ -127,8 +128,8 @@ function getstoreShowImg(db_pool: any, req: Request, res: Response) {
             if (result.length != 0) {
                 let storeshowimg: string[] = [];
                 for (let item of result) {
-                    let img: string = item.storeshowimg
-                    
+                    let img: string = item.imgUrl
+                
                     storeshowimg.push(img);
                 }
                 let storeShowimgResponse: storeShowImgResponse = {
@@ -481,3 +482,48 @@ let uid= _req.head.uid as string
         });
     })
 }
+
+function getgamebuystate(db_pool: any, req: Request, res: Response){
+    
+    let _req: Requester<getstateRequestParams> = req.body as Requester<getstateRequestParams>;
+    let gid= _req.body?.gameid as number
+
+let uid= _req.head.uid as string
+    let sql1 = "select * from buygame where uid=? and gid=? ;";
+    let sql1_params =[uid,gid]
+   
+    db_pool.getConnection((err: any, conn: any) => {
+        if (err) { throw err; }
+        conn.query(sql1, sql1_params, (err: any, result: any, fields: any) => {
+            if (err) { throw err; }
+            if (result.length != 0) {
+              
+                
+                let getgamebuystate: getstateResponse = {
+                    state:true,
+                    success: true
+                };
+                console.log("getgamebuystate is running");
+                res.json(getgamebuystate);
+            } else {
+                let getgamebuystate: getstateResponse = {
+                    state:false,
+                    success: true
+                };
+                console.log("getgamebuystate is running");
+                res.json(getgamebuystate);
+            }
+
+            // When done with the connection, release it.
+            conn.release();
+            // Handle error after the release.
+            if (err) throw err;
+            // Don't use the connection here, it has been returned to the pool.
+        });
+    })
+}
+
+
+
+
+
