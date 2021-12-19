@@ -34,5 +34,7 @@ export const TYPE:{[key:string]:Function} ={
     'getgamebuystate':getgamebuystate,
     "EditerUserInfo":User.EditerUserInfo,
     "DestroyAccount":User.DestroyAccount,
-    "LoginValidation":User.LoginValidation
+    "LoginValidation":User.LoginValidation,
+    "GetMoments":User.GetMoments,
+    "GetMomentIndexList":User.GetMomentIndexList
 };
