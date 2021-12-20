@@ -16,7 +16,8 @@ export {
     cancelfollowgame,
     getgamefollowstate,
     getgamebuystate,
-    getGamelibrary
+    getGamelibrary,
+    getGamewish,
 }
 //store
 function searchSimpleGame(db_pool: any, req: Request, res: Response) {
@@ -591,3 +592,57 @@ function getGamelibrary(db_pool: any, req: Request, res: Response) {
 }
 
 
+
+function getGamewish(db_pool: any, req: Request, res: Response) {
+    let _req: Requester<SimpleGameRequestParams> = req.body as Requester<SimpleGameRequestParams>;
+    let num=8;
+    let uid= _req.head.uid as string;
+    let type = _req.body?.type;
+     
+    let sql1 = "SELECT game.gid, gameName, imgUrl, gameType, nowPrice, oldPrice, Minimum FROM game,followgame where  game.gid=followgame.gid and uid=?  order by followtime asc LIMIT ?,?;";
+    // let sql1="select gid, gameName, imgUrl, gameType, nowPrice, oldPrice, Minimum from game where pid in (?) and is_paper=1 ;";
+    let sql1_params = [uid,(_req.body as SimpleGameRequestParams).index * num, (_req.body as SimpleGameRequestParams).index * num + num];
+    // console.log(sql1_params);
+    db_pool.getConnection((err: any, conn: any) => {
+        if (err) { throw err; }
+        conn.query(sql1, sql1_params, (err: any, result: any, fields: any) => {
+            if (err) { throw err; }
+            if (result.length != 0) {
+                let simplegamelist: simplegame[] = [];
+                for (let item of result) {
+                    let simplegame: simplegame = {
+                        gid: item.gid,
+                        gameName: item.gameName,
+                        imgUrl: item.imgUrl,
+                        gameType: item.gameType.split('$'),
+                        nowPrice: item.nowPrice,
+                        oldPrice: item.oldPrice,
+                        Minimum: item.Minimum,
+                    };
+                    simplegamelist.push(simplegame);
+                }
+                let simplegamelistResponse: simplegamelistResponse = {
+                    
+                    success: true,
+                    simplegamelist:simplegamelist
+                };
+                console.log("getGamewish is running");
+                res.json(simplegamelistResponse);
+            } else {
+
+                // let simplegamelistResponse: simplegamelistResponse = {
+                //     success: false,
+                
+                // };
+                // res.json(simplegamelistResponse);
+                console.log("getSimpleGame 查询错误！");
+            }
+
+            // When done with the connection, release it.
+            conn.release();
+            // Handle error after the release.
+            if (err) throw err;
+            // Don't use the connection here, it has been returned to the pool.
+        });
+    })
+}

@@ -33,6 +33,7 @@ export const TYPE:{[key:string]:Function} ={
     'getgamefollowstate':Store.getgamefollowstate,
     'getgamebuystate':Store.getgamebuystate,
     "getGamelibrary":Store.getGamelibrary,
+    "getGamewish":Store.getGamewish,
     "EditerUserInfo":User.EditerUserInfo,
     "DestroyAccount":User.DestroyAccount,
     "LoginValidation":User.LoginValidation,
