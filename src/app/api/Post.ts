@@ -225,7 +225,7 @@ function getPost(db_pool:any, req:Request, res:Response){
                     uid:result[0].uid,
                     userName:result[0].name,
                     userLevel:result[0].level,
-                    avatarUrl:result[0].avatar
+                    avatarUrl:result[0].avatar,
                 };
                 let _res:PostResponse={
                     post:post,
@@ -250,8 +250,18 @@ function getPost(db_pool:any, req:Request, res:Response){
 function SearchPostCardDetail(db_pool:any, req:Request, res:Response){
     let _req: Requester<PostSearchRequestParams> = req.body as Requester<PostSearchRequestParams>;
     let content = _req.body.content as string;
-    let sql1 = 'select pid from post where post_content REGEXP (?) or title REGEXP (?) ;';
-    let sql1_params=[content,content];
+    let tid:number = _req.body.tid as number;
+    let sql1_params:any[]=[content,content];
+    let sql1:string = "";
+    if(tid==null || tid==undefined)
+    {
+        sql1 = 'select pid from post where post_content REGEXP (?) or title REGEXP (?) ;';
+    }else{
+        sql1 = 'select pid from post where post_content REGEXP (?) or title REGEXP (?) and tid = ?;';
+        sql1_params.push(tid);
+    }
+
+
     db_pool.getConnection((err: any, conn: any) => {
         if (err) { throw err; }
         conn.query(sql1, sql1_params, (err: any, result: any, fields: any) => {
@@ -265,6 +275,7 @@ function SearchPostCardDetail(db_pool:any, req:Request, res:Response){
                     success: true,
                     pid:pids
                 };
+                // console.log(result)
                 console.log("SearchPostCardDetail Success!");
                 res.json(_res);
             } else {
