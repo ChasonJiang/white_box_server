@@ -496,9 +496,8 @@ function GetMoments(db_pool:any, req:Request, res:Response){
             if(err){throw err;}
             // console.log(111)
             // console.log(result)
+            let postCardsDetail:PostCardDetail[] = [];
             if(result.length!=0){
-
-                let postCardsDetail:PostCardDetail[] = [];
                 for(let item of result){
                     let post:PostCardDetail={
                         uid:item.uid,
@@ -517,35 +516,34 @@ function GetMoments(db_pool:any, req:Request, res:Response){
                     }
                     postCardsDetail.push(post);
                 }
-                conn.query("select * from user where uid=?",(_req.body as MomentRequestParams).uid,(err:any,result:any,fields:any)=>{
-                    if (err) {
-                        res.json({
-                            success: false,
-                            message:"动态获取失败，查询用户信息出错！"
-                        }); 
-                        throw err; 
-                    }
-                    // console.log(result);
-                    if(result.length!=0){
-                        let _res:MomentResponse={
-                            postCardsDetail:postCardsDetail,
-                            userInfo:{
-                                uid:result[0].uid,
-                                userName:result[0].name,
-                                avatarUrl:result[0].avatar,
-                                userLevel:result[0].level,
-                                numberOfFans:result[0].num_fans,
-                                numberOfFollow:result[0].num_follow,
-                            }as UserInfo
-                        };
-                        res.json(_res);
-                    }else{
-
-                    }
-                });
-            }else{
-                console.log("未查询uid:",(_req.body as MomentRequestParams).uid,"的Moments");
+                
             }
+            conn.query("select * from user where uid=?",(_req.body as MomentRequestParams).uid,(err:any,result:any,fields:any)=>{
+                if (err) {
+                    res.json({
+                        success: false,
+                        message:"动态获取失败，查询用户信息出错！"
+                    }); 
+                    throw err; 
+                }
+                // console.log(result);
+                if(result.length!=0){
+                    let _res:MomentResponse={
+                        postCardsDetail:postCardsDetail,
+                        userInfo:{
+                            uid:result[0].uid,
+                            userName:result[0].name,
+                            avatarUrl:result[0].avatar,
+                            userLevel:result[0].level,
+                            numberOfFans:result[0].num_fans,
+                            numberOfFollow:result[0].num_follow,
+                        }as UserInfo
+                    };
+                    res.json(_res);
+                }else{
+
+                }
+            });
 
             // When done with the connection, release it.
             conn.release();

@@ -38,5 +38,6 @@ export const TYPE:{[key:string]:Function} ={
     "DestroyAccount":User.DestroyAccount,
     "LoginValidation":User.LoginValidation,
     "GetMoments":User.GetMoments,
-    "GetMomentIndexList":User.GetMomentIndexList
+    "GetMomentIndexList":User.GetMomentIndexList,
+    "GetPostCardDetailIndexListByTid":Post.PostCardDetailIndexListByTid
 };

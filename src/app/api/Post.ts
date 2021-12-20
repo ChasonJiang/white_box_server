@@ -12,7 +12,8 @@ export {
     PostCardDetailList,
     getPost,
     SearchPostCardDetail,
-    UploadPost
+    UploadPost,
+    PostCardDetailIndexListByTid
 };
 
 function PostCardIndexList(db_pool:any, req:Request, res:Response){
@@ -245,6 +246,43 @@ function getPost(db_pool:any, req:Request, res:Response){
 
     });
 
+}
+
+function PostCardDetailIndexListByTid(db_pool:any, req:Request, res:Response){
+    let sql1="select * from post_topic_map where tid = ?;";
+    let sql1_params=[(req.body.body.tid) as number];
+
+    db_pool.getConnection((err:any,conn:any)=>{
+        if (err){throw err;}
+        conn.query(sql1,sql1_params,(err:any,result:any,fields:any)=>{
+             if (result.length!=0){
+                let pids:string[] = [];
+                for(let item of result){
+                    pids.push(item.pid);
+                    
+                }
+                // console.log(pids);
+                let _res:PostCardDetailIndexResponse={
+                    success:true,
+                    pid:pids
+                }
+                res.json(_res);
+                 
+             }else{
+                let _res:PostCardDetailIndexResponse={
+                    success:false,
+                    message:"未查询到此PostCardDetailIndexList"
+                }
+                res.json(_res);
+                console.log("未查询到此PostCardDetailIndexList");
+             }
+            // When done with the connection, release it.
+            conn.release();
+            // Handle error after the release.
+            if (err) throw err;
+            // Don't use the connection here, it has been returned to the pool.
+        });
+    });
 }
     
 function SearchPostCardDetail(db_pool:any, req:Request, res:Response){
