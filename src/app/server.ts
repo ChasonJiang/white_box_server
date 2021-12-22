@@ -8,11 +8,11 @@ const port = 3500;
 const cors=require("cors");
 const mysql = require("mysql");
 const db_pool=mysql.createPool({
-    host     : '106.52.148.60',
-    user     : 'white_box',
-    password : 'Project@white_box_410',
+    host     : 'ip',
+    user     : 'account',
+    password : 'password',
     database : 'white_box',
-    connectionLimit : 10,
+    connectionLimit : 50,
 });
 
 app.use(express.json({'limit':'100mb'}));
